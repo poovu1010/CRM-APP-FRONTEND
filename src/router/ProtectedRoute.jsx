@@ -1,43 +1,34 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
-import api from '../api/axios'
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import api from "../api/axios";
 
-export default function ProtectedRoute({children}) {
+export default function ProtectedRoute({ children }) {
+  const [isAuth, setAuth] = useState(null);
 
-  const [isAuth,setAuth] = useState(null)
-
-  useEffect(()=>{
+  useEffect(() => {
     async function isVerified() {
       try {
-
-        const res = await api.post("/Owner/Verify",{withCredentials:true})
-        console.log("veri")
-      
-
-      setAuth(true)
-        
+        console.log("isverifed")
+        const res = await api.post("/Owner/Verify", {}, { withCredentials: true });
+        console.log(res)
+        setAuth(true);
       } catch (error) {
-        // console.log(error.response)
-        setAuth(false)
-         
-       
+        console.log("VERIFY FAILED:", error.response?.status);
+        setAuth(false);
       }
-      
     }
-    isVerified()
-  },[])
 
+    isVerified();
+  }, []);
 
+  if (isAuth === null) {
+    return <h1>Loading...</h1>;
+  }
 
-   if (isAuth === false) {
-          return <Navigate to={"/auth/login"}/>
-          
-        }
+  if (isAuth === false) {
+    console.log(false)
+    return <Navigate to="/auth/login" replace />;
+  }
 
-return children
-
-  return (
-    <></>
-  )
+  return children;
 }
