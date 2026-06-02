@@ -11,9 +11,9 @@ export default function BottomBar() {
 
 
   const navItems = [
-    { id: "dashboard", label: "Dashboard", Icon: Home, Link: "/Dashboard" },
-    { id: "customers", label: "Customers", Icon: Users, Link: "/Dashboard/CustomerPage" },
-    { id: "orders", label: "Orders", Icon: GitMerge, Link: "/Dashboard/all-orders" },
+    { id: "dashboard", label: "Dashboard", Icon: Home, Link: "/dashboard" },
+    { id: "customers", label: "Customers", Icon: Users, Link: "/dashboard/CustomerPage" },
+    { id: "orders", label: "Orders", Icon: GitMerge, Link: "/dashboard/all-orders" },
   ];
 
 
