@@ -1,291 +1,505 @@
 import React, { useContext, useState } from 'react'
 import AuthDetails from '../context/AuthContext';
 import axios from 'axios';
+import { h1 } from 'framer-motion/client';
+import { ShoppingBag, User, X } from 'lucide-react';
+import api from '../api/axios';
+import { toast } from 'react-toastify';
 
 export default function AddCustomer() {
   const { isOpen, setopen, Customers, getCustomers } = useContext(AuthDetails)
 
-  const [step, setStep] = useState('customer') // 'customer' | 'order'
-  const [newCustomer, setNewCustomer] = useState(null)
+  const [boxState, setBoxState] = useState({
+    boxTab: 1,
+    isSuccess: false
+    , header: "Add Customer"
+  })
 
-  const [customerInput, setCustomerInput] = useState({
-    customer_name: "",
+  // Customer details
+  const [CustomerInput, setCustomerInput] = useState({
+    Name: "",
     Phone: "",
+    Email: "",
     Address: ""
   })
+
+  const [errors, setErrors] = useState({});
+
+
+  // Order details
 
   const [orderInput, setOrderInput] = useState({
     clothType: "",
     price: "",
     advancePaid: "",
-    expectedDeliveryDate: ""
-  })
+    expectedDeliveryDate: "",
+    status: "stitching",
+    notes: "",
+  });
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [orderErrors, setOrderErrors] = useState({});
 
-  function closeModal() {
+
+
+
+
+
+
+  // function
+
+  function getOrderInput(e) {
+    const { name, value } = e.target;
+
+    setOrderInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setOrderErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  }
+
+
+  function backBtn() {
+    setCustomerInput({
+      Name: "",
+      Phone: "",
+      Email: "",
+      Address: ""
+    })
+
+    setOrderInput({
+      clothType: "",
+      price: "",
+      advancePaid: "",
+      expectedDeliveryDate: "",
+      status: "stitching",
+      notes: ""
+    })
+
+
     setopen(false)
-    setStep('customer')
-    setNewCustomer(null)
-    setCustomerInput({ customer_name: "", Phone: "", Address: "" })
-    setOrderInput({ clothType: "", price: "", advancePaid: "", expectedDeliveryDate: "" })
-    setError("")
+
   }
 
-  function setCustomerField(e) {
-    const { name, value } = e.target
-    setCustomerInput(prev => ({ ...prev, [name]: value }))
+
+
+
+
+
+
+
+
+  function getInput(e) {
+
+    const name = e.target.name
+    const value = e.target.value
+
+    setCustomerInput(input => {
+      return { ...CustomerInput, [name]: value }
+    })
+
   }
 
-  function setOrderField(e) {
-    const { name, value } = e.target
-    setOrderInput(prev => ({ ...prev, [name]: value }))
+  function gotoOrders() {
+    const isValid = validateCustomer();
+
+    if (!isValid) return;
+
+    setBoxState({
+      boxTab: 2,
+      isSuccess: true,
+      header: "Get Order",
+    });
+
+
   }
 
-  async function submitCustomer(e) {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
-    try {
-      const res = await axios.post("http://localhost:5000/Owner/newCustomer", {
-        customer_name: customerInput.customer_name,
-        Phone: customerInput.Phone,
-        Address: customerInput.Address
-      }, { withCredentials: true })
 
-      const data = res.data.data
-      const detail = {
-        _id: data._id,
-        Phone: data.Phone,
-        customer_name: data.customer_name,
-        Address: data.Address,
-        createdAt: data.createdAt
-      }
-      console.log("hi")
+  function validateOrder() {
+    const errors = {};
 
-      getCustomers(prev => ({
-        ...prev,
-        data: [...(prev?.data || []), detail]
-      }))
-      setNewCustomer(detail)
-      setStep('order')
-    } catch (err) {
-      console.log(err.response)
-      setError("Failed to add customer. Please try again.")
-    } finally {
-      setLoading(false)
+    if (!orderInput.clothType) {
+      errors.clothType = "Cloth type is required";
     }
+
+    if (!orderInput.price) {
+      errors.price = "Total price is required";
+    } else if (Number(orderInput.price) <= 0) {
+      errors.price = "Price must be greater than 0";
+    }
+
+    if (!orderInput.advancePaid) {
+      errors.advancePaid = "Advance amount is required";
+    } else if (Number(orderInput.advancePaid) < 0) {
+      errors.advancePaid = "Advance cannot be negative";
+    } else if (Number(orderInput.advancePaid) > Number(orderInput.price)) {
+      errors.advancePaid = "Advance cannot be greater than total price";
+    }
+
+    if (!orderInput.expectedDeliveryDate) {
+      errors.expectedDeliveryDate = "Delivery date is required";
+    }
+
+    setOrderErrors(errors);
+    return Object.keys(errors).length === 0;
   }
+
+  function validateCustomer() {
+    const newErrors = {};
+
+    if (!CustomerInput.Name.trim()) {
+      newErrors.Name = "Name is required";
+    }
+
+    if (!CustomerInput.Phone.trim()) {
+      newErrors.Phone = "Phone number is required";
+    } else if (!/^[0-9]{10}$/.test(CustomerInput.Phone)) {
+      newErrors.Phone = "Enter valid 10 digit phone number";
+    }
+
+    if (CustomerInput.Email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(CustomerInput.Email)) {
+      newErrors.Email = "Enter valid email address";
+    }
+
+    if (!CustomerInput.Address.trim()) {
+      newErrors.Address = "Address is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  }
+
+
+
+  // API CALL
 
   async function submitOrder(e) {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
-    try {
-      await axios.post("http://localhost:5000/Owner/newOrder", {
-        customerId: newCustomer._id,
-        clothType: orderInput.clothType,
-        price: Number(orderInput.price),
-        advancePaid: Number(orderInput.advancePaid),
-        expectedDeliveryDate: orderInput.expectedDeliveryDate
-      }, { withCredentials: true })
+    e?.preventDefault();
 
-      closeModal()
-    } catch (err) {
-      console.log(err.response)
-      setError("Failed to place order. Please try again.")
-    } finally {
-      setLoading(false)
+    const isValid = validateOrder();
+    if (!isValid) return;
+
+    try {
+   
+      // CustomerAPI
+      const customerRes = await api.post(
+        "/Owner/newCustomer",
+        {
+          customer_name: CustomerInput.Name,
+          Phone: CustomerInput.Phone,
+          Addres: CustomerInput.Address,
+          Email: CustomerInput.Email,
+        },
+        { withCredentials: true }
+      );
+
+      const customerId = customerRes.data.data._id;
+
+   
+      // getOrderApi
+      const orderRes = await api.post(
+        "/Owner/newOrder",
+        {
+          customerId: customerId,
+          clothType: orderInput.clothType,
+          price: Number(orderInput.price),
+          advancePaid: Number(orderInput.advancePaid),
+          expectedDeliveryDate: orderInput.expectedDeliveryDate,
+          // status: orderInput.status,
+        },
+        { withCredentials: true }
+      );
+
+     
+
+      toast.success("Customer and Order created successfully");
+      setopen(false);
+
+    } catch (error) {
+      console.log(error);
+
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Server error. Please try again.");
+      }
     }
   }
 
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center px-4">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6">
+        <div className='bg-black/50  h-screen w-screen fixed top-0 left-0 flex place-items-center justify-center'>
 
-            {/* Step indicator */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className={`flex items-center gap-2 ${step === 'customer' ? 'text-violet-600' : 'text-green-500'}`}>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white
-                  ${step === 'customer' ? 'bg-violet-600' : 'bg-green-500'}`}>
-                  {step === 'order' ? '✓' : '1'}
+          <div className='w-100  relative h-170 px-8  py-4 bg-white opacity-100 rounded-2xl'>
+
+            {/* close button */}
+            <X className='absolute right-5 cursor-pointer '
+              onClick={() => setopen(false)}></X>
+
+
+            {/* heading */}
+            <div>
+              <div className='flex gap-3 mt-3'>
+                <div className='h-10 w-10 bg-violet-400 rounded-full flex place-items-center justify-center font-extrabold'>{boxState.boxTab}</div>
+
+                <div>
+                  <h1 className='self-center font-bold'>{boxState.header}</h1>
+                  <h1 className=' text-xs text-gray-500'>create customer & orderdetails</h1>
                 </div>
-                <span className="text-sm font-semibold">Customer</span>
+
+              </div>
+              {/* order status */}
+              <div className='mt-4 flex justify-center'>
+                <div className={`w-30 flex place-items-center justify-center gap-2 h-10 rounded-2xl ${boxState.isSuccess === true ? `bg-green-400` : `bg-violet-500`}`}>
+                  <User />
+                  <h1 className='text-sm'>Customer</h1>
+                </div>
+                {/* pipe line ui  */}
+                <div className={`relative w-25 self-center h-1.5 bg-white border border-x-0 
+                                before:content-[""] before:absolute before:animate-pulse  before:h-1.5    before:left-0
+                ${boxState.isSuccess === true ? `before:bg-green-400 before:w-25` : `before:bg-violet-500 before:w-10`}`}>
+
+                </div>
+
+                <div className={`w-30 flex place-items-center justify-center gap-2 h-10 rounded-2xl border  ${boxState.isSuccess === true ? `bg-violet-400` : `bg-white`}`}>
+                  <ShoppingBag></ShoppingBag>
+                  <h1 className='text-sm'>Order</h1>
+                </div>
               </div>
 
-              <div className={`flex-1 h-0.5 ${step === 'order' ? 'bg-violet-600' : 'bg-gray-200'}`} />
+              {/* form */}
 
-              <div className={`flex items-center gap-2 ${step === 'order' ? 'text-violet-600' : 'text-gray-400'}`}>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold text-white
-                  ${step === 'order' ? 'bg-violet-600' : 'bg-gray-300'}`}>
-                  2
-                </div>
-                <span className="text-sm font-semibold">Order</span>
-              </div>
-            </div>
+              {boxState.boxTab === 1 && (
+                <>
+                  <form className='flex flex-col gap-2 border h-110 mt-5 rounded-2xl px-3 pt-2 overflow-y-auto '>
+                    {/* name */}
+                    <div className='flex flex-col gap-1 '>
+                      <label className='ml-1 font-bold text-lg' htmlFor="Name">Name</label>
+                      <input
+                        onChange={getInput}
+                        value={CustomerInput.Name}
+                        type="text" id='Name' name='Name' className='border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300'
+                        placeholder={`Enter the Name`} />
+                      {errors.Name && (
+                        <p className="text-red-500 text-sm ml-1 vibrate">
+                          {errors.Name}
+                        </p>
+                      )}
 
-            {/* Header */}
-            <div className="relative flex items-center gap-3 mb-6">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">
-                  {step === 'customer' ? 'Add Customer' : 'Add Order'}
-                </h1>
-                <p className="text-sm text-gray-500">
-                  {step === 'customer'
-                    ? 'Enter customer details below'
-                    : `For: ${newCustomer?.customer_name}`}
-                </p>
-              </div>
-              <button
-                onClick={closeModal}
-                type="button"
-                className="absolute right-0 top-0 text-gray-400 hover:text-gray-700 text-xl font-bold cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
+                    </div>
 
-            {/* Error message */}
-            {error && (
-              <div className="mb-4 px-4 py-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl">
-                {error}
-              </div>
-            )}
+                    {/* phone */}
+                    <div className='flex flex-col gap-1'>
+                      <label className='ml-1 font-bold text-lg' htmlFor="Phone">Phone</label>
+                      <input
+                        onChange={getInput}
+                        value={CustomerInput.Phone}
+                        placeholder='Enter the Phone Number' type="text" id='Phone' name='Phone' className='border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300' />
+                      {errors.Phone && (
+                        <p className="text-red-500 text-sm ml-1 vibrate">
+                          {errors.Phone}
+                        </p>
+                      )}
+                    </div>
+                    {/* email */}
+                    <div className='flex flex-col gap-1'>
+                      <label className='ml-1 font-bold text-lg' htmlFor="Email">Email</label>
+                      <input
+                        onChange={getInput}
+                        value={CustomerInput.Email}
+                        type="text" placeholder='Enter the Email' name='Email' id='Email' className='border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300' />
+                      {errors.Email && (
+                        <p className="text-red-500 text-sm ml-1 vibrate">
+                          {errors.Email}
+                        </p>
+                      )}
+                    </div>
+                    {/* address */}
+                    <div className='flex flex-col gap-1'>
+                      <label className=' ml-1 font-bold text-lg' htmlFor="">Address</label>
+                      <textarea
+                        onChange={getInput}
+                        value={CustomerInput.Address}
+                        name="Adderess" placeholder='Enter the Address' id="Address" name="Address" className='border px-3 pt-2.5 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300'></textarea>
+                      {errors.Address && (
+                        <p className="text-red-500 text-sm ml-1 vibrate">
+                          {errors.Address}
+                        </p>
+                      )}
+                    </div>
 
-            {/* STEP 1: Customer Form */}
-            {step === 'customer' && (
-              <form className="space-y-5" onSubmit={submitCustomer}>
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-gray-700">Customer Name</label>
-                  <input
-                    name="customer_name"
-                    value={customerInput.customer_name}
-                    onChange={setCustomerField}
-                    type="text"
-                    placeholder="Enter customer name"
-                    required
-                    className="border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500"
-                  />
-                </div>
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-gray-700">Phone Number</label>
-                  <input
-                    name="Phone"
-                    value={customerInput.Phone}
-                    onChange={setCustomerField}
-                    type="text"
-                    placeholder="Enter phone number"
-                    required
-                    className="border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500"
-                  />
-                </div>
+                  </form>
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-gray-700">Address</label>
-                  <textarea
-                    name="Address"
-                    value={customerInput.Address}
-                    onChange={setCustomerField}
-                    placeholder="Enter address"
-                    rows={3}
-                    className="border border-gray-300 rounded-xl px-4 py-3 outline-none resize-none focus:ring-2 focus:ring-violet-500"
-                  />
-                </div>
+                  <div className='mt-3 flex justify-around'>
+                    <button onClick={backBtn} className='bg-gray-300 h-13 w-3/7 rounded-2xl'>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-60 transition-all duration-300 text-white font-semibold py-3 rounded-xl shadow-md"
-                >
-                  {loading ? 'Saving...' : 'Next: Add Order →'}
-                </button>
-              </form>
-            )}
+                      cancel
+                    </button>
 
-            {/* STEP 2: Order Form */}
-            {step === 'order' && (
-              <form className="space-y-5" onSubmit={submitOrder}>
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-gray-700">Cloth Type</label>
-                  <input
-                    name="clothType"
-                    value={orderInput.clothType}
-                    onChange={setOrderField}
-                    type="text"
-                    placeholder="e.g. Shirt, Pant, Saree"
-                    required
-                    className="border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500"
-                  />
-                </div>
+                    <button onClick={gotoOrders} className='bg-violet-400 h-13 w-3/7 rounded-2xl'>
+                      <p>New one</p>
+                    </button>
 
-                
-                
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-700">Price (₹)</label>
-                    <input
-                      name="price"
-                      value={orderInput.price}
-                      onChange={setOrderField}
-                      type="number"
-                      placeholder="0"
-                      required
-                      className="border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500"
-                    />
                   </div>
-                  
+                </>
+              )}
 
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-700">Advance (₹)</label>
-                    <input
-                      name="advancePaid"
-                      value={orderInput.advancePaid}
-                      onChange={setOrderField}
-                      type="number"
-                      placeholder="0"
-                      required
-                      className="border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500"
-                    />
+              {boxState.boxTab === 2 && (
+
+                <>
+                  <form className="flex flex-col gap-5  border h-110 mt-5 rounded-2xl px-3 pt-2 overflow-y-auto">
+
+                    {/* Cloth Type */}
+                    <div className="flex flex-col gap-1">
+                      <label className="ml-1 font-bold text-lg" htmlFor="clothType">
+                        Cloth Type
+                      </label>
+                      <select
+                        value={orderInput.clothType}
+                        onChange={getOrderInput}
+                        id="clothType"
+                        name="clothType"
+                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                      >
+                        <option value="">Select Cloth Type</option>
+                        <option value="Shirt">Shirt</option>
+                        <option value="Pant">Pant</option>
+                        <option value="Blouse">Blouse</option>
+                        <option value="Chudi">Chudi</option>
+                        <option value="Coat">Coat</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {orderErrors.clothType && <p className="text-red-500 text-sm vibrate">{orderErrors.clothType}</p>}
+                    </div>
+
+                    {/* Total Price */}
+                    <div className="flex flex-col gap-1">
+                      <label className="ml-1 font-bold text-lg" htmlFor="price">
+                        Total Price
+                      </label>
+                      <input
+                        value={orderInput.price}
+                        onChange={getOrderInput}
+                        type="number"
+                        id="price"
+                        name="price"
+                        placeholder="Enter Total Price"
+                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                      />
+                      {orderErrors.price && <p className="text-red-500 text-sm vibrate">{orderErrors.price}</p>}
+                    </div>
+
+                    {/* Advance Amount */}
+                    <div className="flex flex-col gap-1">
+                      <label className="ml-1 font-bold text-lg" htmlFor="advancePaid">
+                        Advance Paid
+                      </label>
+                      <input
+                        type="number"
+                        id="advancePaid"
+                        name="advancePaid"
+                        value={orderInput.advancePaid}
+                        onChange={getOrderInput}
+                        placeholder="Enter Advance Amount"
+                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                      />
+                      {orderErrors.advancePaid && <p className="text-red-500 text-sm vibrate">{orderErrors.advancePaid}</p>}
+                    </div>
+
+                    {/* Delivery Date */}
+                    <div className="flex flex-col gap-1">
+                      <label
+                        className="ml-1 font-bold text-lg"
+                        htmlFor="expectedDeliveryDate"
+                      >
+                        Delivery Date
+                      </label>
+                      <input
+                        value={orderInput.expectedDeliveryDate}
+                        onChange={getOrderInput}
+                        type="date"
+                        id="expectedDeliveryDate"
+                        name="expectedDeliveryDate"
+                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                      />
+                      {orderErrors.expectedDeliveryDate && <p className="text-red-500 text-sm vibrate">{orderErrors.expectedDeliveryDate}</p>}
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex flex-col gap-1">
+                      <label className="ml-1 font-bold text-lg" htmlFor="status">
+                        Status
+                      </label>
+                      <select
+                        value={orderInput.status}
+                        onChange={getOrderInput}
+                        id="status"
+                        name="status"
+                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                      >
+                        <option value="stitching">Stitching</option>
+                        <option value="ready">Ready</option>
+                        <option value="delivered">Delivered</option>
+                      </select>
+                      <p></p>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="flex flex-col gap-1">
+                      <label className="ml-1 font-bold text-lg" htmlFor="notes">
+                        Instructions
+                      </label>
+                      <textarea
+                        id="notes"
+                        name="notes"
+                        value={orderInput.notes}
+                        onChange={getOrderInput}
+                        placeholder="Special instructions..."
+                        className="border px-3 pt-2 h-20 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                      />
+                      <p></p>
+                    </div>
+                  </form>
+
+                  <div className="mt-3 flex justify-around">
+                    <button
+                      type="button"
+                      className="bg-gray-300 h-13 w-3/7 rounded-2xl"
+                      onClick={() =>
+                        setBoxState({
+                          boxTab: 1,
+                          isSuccess: false,
+                          header: "Add Customer"
+                        })
+                      }
+                    >
+                      Back
+                    </button>
+
+                    <button
+                      onClick={submitOrder}
+                      className="bg-violet-400 h-13 w-3/7 rounded-2xl text-white font-semibold"
+                    >
+                      Create Order
+                    </button>
                   </div>
-                </div>
+                </>
+              )}
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-gray-700">Expected Delivery Date</label>
-                  <input
-                    name="expectedDeliveryDate"
-                    value={orderInput.expectedDeliveryDate}
-                    onChange={setOrderField}
-                    type="date"
-                    className="border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-violet-500"
-                  />
-                </div>
 
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="flex-1 border border-gray-300 text-gray-600 hover:bg-gray-50 font-semibold py-3 rounded-xl transition-all duration-300"
-                  >
-                    Skip Order
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 transition-all duration-300 text-white font-semibold py-3 rounded-xl shadow-md"
-                  >
-                    {loading ? 'Placing...' : 'Place Order'}
-                  </button>
-                </div>
-              </form>
-            )}
+
+            </div>
 
           </div>
+
         </div>
+
       )}
     </>
   )
