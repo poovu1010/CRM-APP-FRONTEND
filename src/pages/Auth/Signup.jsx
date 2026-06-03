@@ -45,7 +45,9 @@ const Signup = () => {
       setTimeout(() => {
       navigate("/dashboard");
     }, 2000);
+    
     } catch (error) {
+      console.log(error)
          console.log(error.response.data);
          toast.error(error.response.data.message)
     }
