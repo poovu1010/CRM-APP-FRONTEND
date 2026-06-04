@@ -17,12 +17,12 @@ export function UserDetails({ children }) {
   useEffect(()=>{
 
     async function getUserFunc(){
-       const customer_data = await api.get("/Owner/get-all-user",{ withCredentials: true })
+       const customer_data = await api.get("/Owner/get-all-customer",{ withCredentials: true })
        const all_orders = await api.get("/Owner/get-all-order",{ withCredentials: true })
 
 
-       getAllorders(all_orders.data.allorders)
-       getCustomers(customer_data.data)
+       getAllorders(all_orders.data)
+       getCustomers(customer_data.data.data)
       
     }
     getUserFunc()

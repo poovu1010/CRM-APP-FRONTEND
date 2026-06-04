@@ -33,7 +33,6 @@ export default function AddCustomer() {
     price: "",
     advancePaid: "",
     expectedDeliveryDate: "",
-    status: "stitching",
     notes: "",
   });
 
@@ -75,7 +74,6 @@ export default function AddCustomer() {
       price: "",
       advancePaid: "",
       expectedDeliveryDate: "",
-      status: "stitching",
       notes: ""
     })
 
@@ -178,13 +176,13 @@ export default function AddCustomer() {
   // API CALL
 
   async function submitOrder(e) {
-    e?.preventDefault();
+    e.preventDefault();
 
     const isValid = validateOrder();
     if (!isValid) return;
 
     try {
-   
+
       // CustomerAPI
       const customerRes = await api.post(
         "/Owner/newCustomer",
@@ -199,7 +197,7 @@ export default function AddCustomer() {
 
       const customerId = customerRes.data.data._id;
 
-   
+
       // getOrderApi
       const orderRes = await api.post(
         "/Owner/newOrder",
@@ -209,15 +207,26 @@ export default function AddCustomer() {
           price: Number(orderInput.price),
           advancePaid: Number(orderInput.advancePaid),
           expectedDeliveryDate: orderInput.expectedDeliveryDate,
-          // status: orderInput.status,
+          status: "Queue",
+          notes: orderInput.notes
         },
         { withCredentials: true }
       );
 
-     
+
+      const refreshCustomers = await api.get("/Owner/get-all-customer",{withCredentials:true})
+      getCustomers(refreshCustomers.data.data)
 
       toast.success("Customer and Order created successfully");
       setopen(false);
+
+      // clear Data
+      backBtn()
+      setBoxState({
+        boxTab: 1,
+        isSuccess: false,
+        header: "Add Customer"
+      })
 
     } catch (error) {
       console.log(error);
@@ -253,7 +262,7 @@ export default function AddCustomer() {
                 </div>
 
               </div>
-              {/* order status */}
+
               <div className='mt-4 flex justify-center'>
                 <div className={`w-30 flex place-items-center justify-center gap-2 h-10 rounded-2xl ${boxState.isSuccess === true ? `bg-green-400` : `bg-violet-500`}`}>
                   <User />
@@ -431,24 +440,6 @@ export default function AddCustomer() {
                       {orderErrors.expectedDeliveryDate && <p className="text-red-500 text-sm vibrate">{orderErrors.expectedDeliveryDate}</p>}
                     </div>
 
-                    {/* Status */}
-                    <div className="flex flex-col gap-1">
-                      <label className="ml-1 font-bold text-lg" htmlFor="status">
-                        Status
-                      </label>
-                      <select
-                        value={orderInput.status}
-                        onChange={getOrderInput}
-                        id="status"
-                        name="status"
-                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
-                      >
-                        <option value="stitching">Stitching</option>
-                        <option value="ready">Ready</option>
-                        <option value="delivered">Delivered</option>
-                      </select>
-                      <p></p>
-                    </div>
 
                     {/* Instructions */}
                     <div className="flex flex-col gap-1">
