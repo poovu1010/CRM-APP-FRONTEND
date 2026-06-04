@@ -34,7 +34,7 @@ const Router = () => {
 
 
         <Route path="/dashboard" element={<ProtectedRoute><ContentLayout/></ProtectedRoute> }>
-          <Route index element={<DashboardGrid />} />
+          {/* <Route index element={<DashboardGrid />} /> */}
           <Route path="CustomerPage" element={<CustomerPage/>}/>
           <Route path="me" element={<ProfilePage/>}></Route>
           <Route path="all-orders" element={<OrdersPage/>}/>
