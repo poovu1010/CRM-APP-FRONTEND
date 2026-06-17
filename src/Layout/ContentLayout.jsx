@@ -8,10 +8,10 @@ import DashboardGrid from "../pages/DashBoard";
 export default function ContentLayout() {
   return (
     <>
-      <div className="relative min-w-screen  min-h-screen">
+      <div className="relative w-full bg-gray-100 min-h-screen">
         <Navbar />
 
-        <main className="pb-20 md:ml-50">
+        <main className="pb-20 py-3 flex flex-col gap-4 px-3 md:ml-50 ">
           <DashboardGrid/>
           <Outlet />
           <Addbutton />

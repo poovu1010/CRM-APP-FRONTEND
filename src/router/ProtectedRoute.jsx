@@ -21,9 +21,9 @@ export default function ProtectedRoute({ children }) {
     isVerified();
   }, []);
 
-  if (isAuth === null) {
-    return <h1>Loading...</h1>;
-  }
+  // if (isAuth === null) {
+  //   return <h1>Loading...</h1>;
+  // }
 
   if (isAuth === false) {
     console.log(false)

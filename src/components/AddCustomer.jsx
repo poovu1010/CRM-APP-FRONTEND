@@ -214,7 +214,7 @@ export default function AddCustomer() {
       );
 
 
-      const refreshCustomers = await api.get("/Owner/get-all-customer",{withCredentials:true})
+      const refreshCustomers = await api.get("/Owner/get-all-customer", { withCredentials: true })
       getCustomers(refreshCustomers.data.data)
 
       toast.success("Customer and Order created successfully");
@@ -242,9 +242,9 @@ export default function AddCustomer() {
   return (
     <>
       {isOpen && (
-        <div className='bg-black/50  h-screen w-screen fixed top-0 left-0 flex place-items-center justify-center'>
+        <div className='bg-black/50 z-50  h-screen w-screen fixed top-0 left-0 flex place-items-center justify-center'>
 
-          <div className='w-100  relative h-170 px-8  py-4 bg-white opacity-100 rounded-2xl'>
+          <div className='w-80 md:w-md  h-auto relative  px-8  py-5 bg-white opacity-100 rounded-2xl'>
 
             {/* close button */}
             <X className='absolute right-5 cursor-pointer '
@@ -253,8 +253,8 @@ export default function AddCustomer() {
 
             {/* heading */}
             <div>
-              <div className='flex gap-3 mt-3'>
-                <div className='h-10 w-10 bg-violet-400 rounded-full flex place-items-center justify-center font-extrabold'>{boxState.boxTab}</div>
+              <div className='flex gap-3 mt-4'>
+                <div className='h-10 w-10 shrink-0 bg-violet-400 rounded-full flex place-items-center justify-center font-extrabold'>{boxState.boxTab}</div>
 
                 <div>
                   <h1 className='self-center font-bold'>{boxState.header}</h1>
@@ -264,18 +264,18 @@ export default function AddCustomer() {
               </div>
 
               <div className='mt-4 flex justify-center'>
-                <div className={`w-30 flex place-items-center justify-center gap-2 h-10 rounded-2xl ${boxState.isSuccess === true ? `bg-green-400` : `bg-violet-500`}`}>
+                <div className={`w-30 flex place-items-center shrink-0 justify-center gap-2 h-10 rounded-2xl ${boxState.isSuccess === true ? `bg-green-400` : `bg-violet-500`}`}>
                   <User />
                   <h1 className='text-sm'>Customer</h1>
                 </div>
                 {/* pipe line ui  */}
                 <div className={`relative w-25 self-center h-1.5 bg-white border border-x-0 
                                 before:content-[""] before:absolute before:animate-pulse  before:h-1.5    before:left-0
-                ${boxState.isSuccess === true ? `before:bg-green-400 before:w-25` : `before:bg-violet-500 before:w-10`}`}>
+                ${boxState.isSuccess === true ? `before:bg-green-400 before:w-full` : `before:bg-violet-500 before:w-3/6`}`}>
 
                 </div>
 
-                <div className={`w-30 flex place-items-center justify-center gap-2 h-10 rounded-2xl border  ${boxState.isSuccess === true ? `bg-violet-400` : `bg-white`}`}>
+                <div className={`w-30 flex shrink-0 place-items-center justify-center gap-2 h-10 rounded-2xl border  ${boxState.isSuccess === true ? `bg-violet-400` : `bg-white`}`}>
                   <ShoppingBag></ShoppingBag>
                   <h1 className='text-sm'>Order</h1>
                 </div>
@@ -285,14 +285,14 @@ export default function AddCustomer() {
 
               {boxState.boxTab === 1 && (
                 <>
-                  <form className='flex flex-col gap-2 border h-110 mt-5 rounded-2xl px-3 pt-2 overflow-y-auto '>
+                  <form className='flex flex-col gap-2 border  h-auto py-6 mt-5 rounded-2xl px-3 pt-2 overflow-y-auto '>
                     {/* name */}
                     <div className='flex flex-col gap-1 '>
                       <label className='ml-1 font-bold text-lg' htmlFor="Name">Name</label>
                       <input
                         onChange={getInput}
                         value={CustomerInput.Name}
-                        type="text" id='Name' name='Name' className='border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300'
+                        type="text" id='Name' name='Name' className='border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300'
                         placeholder={`Enter the Name`} />
                       {errors.Name && (
                         <p className="text-red-500 text-sm ml-1 vibrate">
@@ -308,7 +308,7 @@ export default function AddCustomer() {
                       <input
                         onChange={getInput}
                         value={CustomerInput.Phone}
-                        placeholder='Enter the Phone Number' type="text" id='Phone' name='Phone' className='border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300' />
+                        placeholder='Enter the Phone Number' type="text" id='Phone' name='Phone' className='border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300' />
                       {errors.Phone && (
                         <p className="text-red-500 text-sm ml-1 vibrate">
                           {errors.Phone}
@@ -321,7 +321,7 @@ export default function AddCustomer() {
                       <input
                         onChange={getInput}
                         value={CustomerInput.Email}
-                        type="text" placeholder='Enter the Email' name='Email' id='Email' className='border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300' />
+                        type="text" placeholder='Enter the Email' name='Email' id='Email' className='border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300' />
                       {errors.Email && (
                         <p className="text-red-500 text-sm ml-1 vibrate">
                           {errors.Email}
@@ -334,7 +334,7 @@ export default function AddCustomer() {
                       <textarea
                         onChange={getInput}
                         value={CustomerInput.Address}
-                        name="Adderess" placeholder='Enter the Address' id="Address" name="Address" className='border px-3 pt-2.5 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300'></textarea>
+                        name="Adderess" placeholder='Enter the Address' id="Address" name="Address" className='border px-3 pt-2.5 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300'></textarea>
                       {errors.Address && (
                         <p className="text-red-500 text-sm ml-1 vibrate">
                           {errors.Address}
@@ -346,12 +346,12 @@ export default function AddCustomer() {
                   </form>
 
                   <div className='mt-3 flex justify-around'>
-                    <button onClick={backBtn} className='bg-gray-300 h-13 w-3/7 rounded-2xl'>
+                    <button onClick={backBtn} className='bg-gray-300 h-10 md:13 w-3/7 rounded-2xl'>
 
                       cancel
                     </button>
 
-                    <button onClick={gotoOrders} className='bg-violet-400 h-13 w-3/7 rounded-2xl'>
+                    <button onClick={gotoOrders} className='bg-violet-400 h-10 md:13 w-3/7 rounded-2xl'>
                       <p>New one</p>
                     </button>
 
@@ -362,11 +362,11 @@ export default function AddCustomer() {
               {boxState.boxTab === 2 && (
 
                 <>
-                  <form className="flex flex-col gap-5  border h-110 mt-5 rounded-2xl px-3 pt-2 overflow-y-auto">
+                  <form className="flex flex-col gap-2 border   h-100 py-6 mt-5 rounded-2xl px-3 pt-2 overflow-y-auto ">
 
                     {/* Cloth Type */}
                     <div className="flex flex-col gap-1">
-                      <label className="ml-1 font-bold text-lg" htmlFor="clothType">
+                      <label className="ml-1 font-bold text-sm" htmlFor="clothType">
                         Cloth Type
                       </label>
                       <select
@@ -374,7 +374,7 @@ export default function AddCustomer() {
                         onChange={getOrderInput}
                         id="clothType"
                         name="clothType"
-                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                        className="border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
                       >
                         <option value="">Select Cloth Type</option>
                         <option value="Shirt">Shirt</option>
@@ -389,7 +389,7 @@ export default function AddCustomer() {
 
                     {/* Total Price */}
                     <div className="flex flex-col gap-1">
-                      <label className="ml-1 font-bold text-lg" htmlFor="price">
+                      <label className="ml-1 font-bold text-sm" htmlFor="price">
                         Total Price
                       </label>
                       <input
@@ -399,14 +399,14 @@ export default function AddCustomer() {
                         id="price"
                         name="price"
                         placeholder="Enter Total Price"
-                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                        className="border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
                       />
                       {orderErrors.price && <p className="text-red-500 text-sm vibrate">{orderErrors.price}</p>}
                     </div>
 
                     {/* Advance Amount */}
                     <div className="flex flex-col gap-1">
-                      <label className="ml-1 font-bold text-lg" htmlFor="advancePaid">
+                      <label className="ml-1 font-bold text-sm" htmlFor="advancePaid">
                         Advance Paid
                       </label>
                       <input
@@ -416,7 +416,7 @@ export default function AddCustomer() {
                         value={orderInput.advancePaid}
                         onChange={getOrderInput}
                         placeholder="Enter Advance Amount"
-                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                        className="border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
                       />
                       {orderErrors.advancePaid && <p className="text-red-500 text-sm vibrate">{orderErrors.advancePaid}</p>}
                     </div>
@@ -424,7 +424,7 @@ export default function AddCustomer() {
                     {/* Delivery Date */}
                     <div className="flex flex-col gap-1">
                       <label
-                        className="ml-1 font-bold text-lg"
+                        className="ml-1 font-bold text-sm"
                         htmlFor="expectedDeliveryDate"
                       >
                         Delivery Date
@@ -435,7 +435,7 @@ export default function AddCustomer() {
                         type="date"
                         id="expectedDeliveryDate"
                         name="expectedDeliveryDate"
-                        className="border px-3 h-12 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
+                        className="border px-3 h-10 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
                       />
                       {orderErrors.expectedDeliveryDate && <p className="text-red-500 text-sm vibrate">{orderErrors.expectedDeliveryDate}</p>}
                     </div>
@@ -443,13 +443,14 @@ export default function AddCustomer() {
 
                     {/* Instructions */}
                     <div className="flex flex-col gap-1">
-                      <label className="ml-1 font-bold text-lg" htmlFor="notes">
+                      <label className="ml-1 font-bold text-sm" htmlFor="notes">
                         Instructions
                       </label>
                       <textarea
                         id="notes"
                         name="notes"
                         value={orderInput.notes}
+                        rows={3}
                         onChange={getOrderInput}
                         placeholder="Special instructions..."
                         className="border px-3 pt-2 h-20 rounded-xl focus:border-violet-500 focus:ring-2 focus:ring-violet-300"
@@ -461,7 +462,7 @@ export default function AddCustomer() {
                   <div className="mt-3 flex justify-around">
                     <button
                       type="button"
-                      className="bg-gray-300 h-13 w-3/7 rounded-2xl"
+                      className="bg-gray-300 h-10 w-3/7 rounded-2xl"
                       onClick={() =>
                         setBoxState({
                           boxTab: 1,
@@ -475,7 +476,7 @@ export default function AddCustomer() {
 
                     <button
                       onClick={submitOrder}
-                      className="bg-violet-400 h-13 w-3/7 rounded-2xl text-white font-semibold"
+                      className="bg-violet-400 h-10 w-3/7 rounded-2xl text-white font-semibold"
                     >
                       Create Order
                     </button>
