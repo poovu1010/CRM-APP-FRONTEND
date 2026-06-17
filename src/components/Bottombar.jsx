@@ -20,9 +20,10 @@ export default function BottomBar() {
 
 
   async function LogoutFun(){
-    window.confirm("Are u sure to Logout")
+   
 
     try {
+       window.confirm("Are u sure to Logout")
       const logout = await api.post("/Owner/logout")
       
       toast.success(logout.data.message)
