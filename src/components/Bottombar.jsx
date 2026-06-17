@@ -26,7 +26,7 @@ export default function BottomBar() {
       const logout = await api.post("/Owner/logout")
       
       toast.success(logout.data.message)
-      if (logout.data.status) {
+      if (logout.data.success) {
          navigate("/auth/login")
       }
      
