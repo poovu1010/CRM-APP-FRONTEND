@@ -24,9 +24,12 @@ export default function BottomBar() {
 
     try {
       const logout = await api.post("/Owner/logout")
-      console.log(logout)
+      
       toast.success(logout.data.message)
-      navigate("/auth/login")
+      if (logout.data.status) {
+         navigate("/auth/login")
+      }
+     
     } catch (error) {
       toast.error("Something Went Wrong")
     }
