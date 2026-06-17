@@ -42,9 +42,12 @@ const Signup = () => {
       );
       console.log(res);
       toast.success(res.data.message);
-      setTimeout(() => {
+      if(res.status == 200){
+        
       navigate("/dashboard");
-    }, 2000);
+
+      }
+      
     
     } catch (error) {
       console.log(error)
