@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import AuthDetails from '../context/AuthContext'
 import { div, h1 } from 'framer-motion/client'
 import { AlertCircle, Calendar, CalendarArrowDown, Clock, IndianRupee, Wallet } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export default function DashBoardData() {
 
@@ -11,6 +12,8 @@ export default function DashBoardData() {
   const [RecentOrderData, SetRecentOrderData] = useState(null)
   const [DueOrdes, SetDueOrdes] = useState(null)
   const [OverAllRevenue, setOverAllRevenue] = useState(null)
+
+  const navigate = useNavigate()
 
 
 
@@ -112,9 +115,9 @@ export default function DashBoardData() {
   function Button() {
     return (
       <>
-        <button className='min-w-0 bg-violet-200 h-10 w-25 rounded-xl  text-violet-600'>
+        {/* <button className='min-w-0 bg-violet-200 h-10 w-25 rounded-xl  text-violet-600'>
           <p className='truncate'>View All</p>
-        </button>
+        </button> */}
       </>
     )
   }
@@ -137,6 +140,11 @@ const formatPrice = (price) => {
 const getCustomerName = (value) => {
   return value?.CustomerDetail?.customer_name || "Unknown Customer";
 };
+
+
+function RouteA_Order(name,id){
+    navigate(`/Orders/all-orders/${name}/${id}`)
+  }
 
   return (
     <div className="grid max-w-full  grid-cols-1 lg:grid-cols-2 gap-5">
@@ -174,6 +182,7 @@ const getCustomerName = (value) => {
         <div
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-4 border-b border-gray-100 last:border-b-0"
           key={value?._id}
+          onClick={()=>RouteA_Order(value?.CustomerDetail?.customer_name,value?._id)}
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-11 w-11 bg-green-100 rounded-full flex items-center justify-center shrink-0">
@@ -243,6 +252,7 @@ const getCustomerName = (value) => {
         <div
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-4 border-b border-gray-100 last:border-b-0"
           key={value?._id}
+           onClick={()=>RouteA_Order(value?.CustomerDetail?.customer_name,value?._id)}
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-11 w-11 bg-red-100 rounded-full flex items-center justify-center shrink-0">
@@ -312,6 +322,7 @@ const getCustomerName = (value) => {
         <div
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-4 border-b border-gray-100 last:border-b-0"
           key={value?._id}
+           onClick={()=>RouteA_Order(value?.CustomerDetail?.customer_name,value?._id)}
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-11 w-11 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
@@ -379,6 +390,7 @@ const getCustomerName = (value) => {
         <div
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-4 border-b border-gray-100 last:border-b-0"
           key={value?._id}
+           onClick={()=>RouteA_Order(value?.CustomerDetail?.customer_name,value?._id)}
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-11 w-11 bg-yellow-100 rounded-full flex items-center justify-center shrink-0">

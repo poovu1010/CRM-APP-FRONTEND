@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import logo from "../../assets/logo.png";
 import axios from "axios";
 import api from "../../api/axios";
+import { Loader2 } from "lucide-react";
 
 const Signup = () => {
   const [show, toShow] = useState(false);
+  const [cliked,setclicked] =useState(false)
 
   const [input, setInput] = useState({
     Email: "",
@@ -27,6 +29,7 @@ const Signup = () => {
   async function submit(e) {
     try {
       e.preventDefault();
+      setclicked(true)
      
 
       const res = await api.post(
@@ -51,8 +54,16 @@ const Signup = () => {
     
     } catch (error) {
       console.log(error)
-         console.log(error.response.data);
-         toast.error(error.response.data.message)
+      setclicked(false)
+         
+      if (error.response) {
+       return   toast.error(error.response.data.message)
+      }
+         
+         toast.error("Your network is problem")
+        
+    }finally{
+      setclicked(false)
     }
 
     
@@ -135,9 +146,9 @@ const Signup = () => {
             <button
               onClick={submit}
               type="submit"
-              className="bg-purple-600 text-white py-3 rounded-lg font-medium mt-4 hover:bg-purple-700 transition"
+              className={`bg-purple-600 text-white py-3 rounded-lg font-medium mt-4 hover:bg-purple-700 transition ${cliked && `cursor-not-allowed`}`}
             >
-              Login
+              <p className="flex justify-center gap-8">Login {cliked &&  <Loader2 className="rotate"/>}</p> 
             </button>
           </form>
         </div>

@@ -31,7 +31,7 @@ export default function IndexPage() {
         </div>
 
         <button
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/Auth/login")}
           className="hidden sm:block px-5 py-2 rounded-xl bg-white border border-gray-200 shadow-sm text-sm font-semibold text-gray-700 hover:bg-gray-50"
         >
           Login
@@ -59,7 +59,7 @@ export default function IndexPage() {
 
             <div className="mt-7 flex flex-col sm:flex-row gap-3">
               <button
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/Auth")}
                 className="h-12 px-6 rounded-2xl bg-violet-600 text-white font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-violet-700"
               >
                 New User
@@ -67,7 +67,7 @@ export default function IndexPage() {
               </button>
 
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/Auth/login")}
                 className="h-12 px-6 rounded-2xl bg-white text-gray-800 font-bold border border-gray-200 shadow-sm hover:bg-gray-50"
               >
                 Already have account
