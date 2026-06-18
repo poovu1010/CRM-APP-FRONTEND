@@ -7,10 +7,12 @@ import axios from "axios";
 
 import logo from "../../assets/logo.png";
 import api from "../../api/axios";
+import { Loader2 } from "lucide-react";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [clicked,setClicked] = useState(false)
 
   // const { authData, manageAuthData } = useContext(AuthDetails);
   const navigate = useNavigate();
@@ -20,16 +22,16 @@ const Register = () => {
     FullName: "",
     Email: "",
     Password: "",
-    ConfirmPasswoed: "",
-    Role: "",
+    ConfirmPasswoed: ""
+    
   });
 
   const [Errors, SetErrors] = useState({
     FullName: "",
     Email: "",
     Password: "",
-    ConfirmPasswoed: "",
-    Role: "",
+    ConfirmPasswoed: ""
+    
   });
 
   const validate = () => {
@@ -60,9 +62,7 @@ const Register = () => {
     } else if (input.Password != input.ConfirmPasswoed) {
       newErrors.ConfirmPasswoed = "password is miss match";
     }
-    if (!input.Role) {
-      newErrors.Role = "role is required";
-    }
+    
 
     SetErrors(newErrors);
     console.log(newErrors);
@@ -81,7 +81,10 @@ const Register = () => {
   // let data = JSON.stringify(input)
 
   async function submit(e) {
-    e.preventDefault();
+
+    try {
+      setClicked(true)
+      e.preventDefault();
 
     let demo = validate();
 
@@ -98,7 +101,8 @@ const Register = () => {
           userName: input.FullName,
           email: input.Email,
           password: input.Password,
-          role: input.Role,
+          role:"Owner"
+          
         },
         { withCredentials: true },
       );
@@ -109,9 +113,15 @@ const Register = () => {
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
-    } else {
-      await toast.error("Registrtion failed");
+    } 
+      
+    } catch (error) {
+      setClicked(false)
+      toast.error(error.response.data.message)
+    }finally{
+      setClicked(false)
     }
+   
   }
 
   return (
@@ -124,7 +134,7 @@ const Register = () => {
             className="w-40 h-40 object-cover scale-125"
           />
           <h1 className="text-2xl font-medium text-purple-600">
-            Fit the world
+            StitchFlow
           </h1>
         </div>
         {/* <p>{data}</p> */}
@@ -169,57 +179,7 @@ const Register = () => {
               </p>
             </div>
 
-            {/* Role Selection */}
-            <div>
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-black "
-              >
-                Select Role
-              </label>
-
-              {/* Relative wrapper needed for the custom arrow */}
-              <div className="">
-                <select
-                  id="role"
-                  name="Role"
-                  value={input?.Role || ""}
-                  onChange={Handleinput}
-                  // 'appearance-none' hides the default browser dropdown arrow
-                  className="w-full  h-10 md:h-12 px-6  bg-gray-50 border border-gray-200 rounded-xl text-gray-900 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 cursor-pointer"
-                >
-                  {/* Default placeholder option */}
-                  <option value="" disabled>
-                    Select your role...
-                  </option>
-                  <option value="Owner">Owner</option>
-                  <option value="Staff">Staff</option>
-                  <option value="Tailor">Tailor</option>
-                </select>
-
-                {/* Custom Dropdown Arrow SVG */}
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </div>
-              </div>
-
-              {/* Error Message Space */}
-              <p className="text-red-500 text-xs flex items-center ">
-                {Errors.Role}
-              </p>
-            </div>
+           
 
             {/* Password */}
             <div className="flex flex-col gap-1">
@@ -298,7 +258,7 @@ const Register = () => {
               onClick={submit}
               className="bg-purple-600 text-white py-3 rounded-lg font-medium mt-4 hover:bg-purple-700 transition"
             >
-              Sign Up
+               <p className="flex justify-center gap-8">Login {clicked && <Loader2 className="rotate"/>}</p> 
             </button>
           </form>
         </div>
@@ -308,7 +268,7 @@ const Register = () => {
           <p className="text-gray-600">
             Already have an account?
             <span className="text-purple-600 font-medium ml-1 cursor-pointer">
-              <Link to={"/login"}> Login</Link>
+              <Link to={"/Auth/login"}> Login</Link>
             </span>
           </p>
         </div>
