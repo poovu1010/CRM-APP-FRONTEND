@@ -39,7 +39,7 @@ const DashboardGrid = () => {
 
         totalOrders: stats[0]?.TotalOrders || 0,
         Queue: stats[0]?.TotalQueue || 0,
-        Processing: stats[0]?.TotalQuee || 0,
+        Processing: stats[0]?.TotalProcessing || 0,
         Stitching: stats[0]?.TotalStitching || 0,
         Ready: stats[0]?.TotalReady || 0,
         Delivered: stats[0]?.TotalDelivery || 0,
