@@ -126,12 +126,12 @@ const Register = () => {
 
   return (
     <div className=" px-10  flex justify-center w-full">
-      <div className=" w-full max-w-md md:max-w-150 bg-white flex flex-col rounded-3xl">
+      <div className=" w-full max-w-md md:max-w-100 bg-white flex flex-col rounded-3xl">
         <div className="flex flex-col pt-6 items-center">
           <img
             src={logo}
             alt="logo"
-            className="w-40 h-40 object-cover scale-125"
+            className="w-30 h-30 object-cover scale-125"
           />
           <h1 className="text-2xl font-medium text-purple-600">
             StitchFlow
@@ -140,7 +140,7 @@ const Register = () => {
         {/* <p>{data}</p> */}
 
         <div className="flex-1 flex flex-col justify-center px-5">
-          <form className="flex flex-col px-8 gap-1 mt-8">
+          <form className="flex flex-col md:px-8 gap-1 mt-8">
             {/* Full Name */}
             <div className="flex flex-col gap-1">
               <label htmlFor="fullName" className="text-sm font-medium">
@@ -256,9 +256,9 @@ const Register = () => {
             <button
               type="submit"
               onClick={submit}
-              className="bg-purple-600 text-white py-3 rounded-lg font-medium mt-4 hover:bg-purple-700 transition"
+              className="bg-purple-600 text-white py-2 rounded-lg font-medium mt-4 hover:bg-purple-700 transition"
             >
-               <p className="flex justify-center gap-8">Login {clicked && <Loader2 className="rotate"/>}</p> 
+               <p className="flex justify-center gap-8 text-sm"> Register {clicked && <Loader2 className="rotate"/>}</p> 
             </button>
           </form>
         </div>

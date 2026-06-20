@@ -23,12 +23,19 @@ export default function BottomBar() {
    
 
     try {
-       window.confirm("Are u sure to Logout")
-      const logout = await api.post("/Owner/logout")
+      const us= window.confirm("Are u sure to Logout")
+      
+
+      if (us) {
+        const logout = await api.post("/Owner/logout")
       
       toast.success(logout.data.message)
       if (logout.data.success) {
          navigate("/auth/login")
+        
+      }
+
+      
       }
      
     } catch (error) {
@@ -49,7 +56,8 @@ export default function BottomBar() {
 
 
       <div className="w-3/4 hidden md:block">
-        <img src={logo} alt="logo" />
+      <Link to={"/dashboard"}> <img  src={logo} alt="logo" /></Link>
+       
 
       </div>
    <div className="flex w-full justify-around  md:flex-col gap-15">
