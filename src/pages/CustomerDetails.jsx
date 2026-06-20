@@ -99,8 +99,8 @@ export default function CustomerDetails() {
                     </div>
 
                     {/* Amount due section */}
-                    <div className='flex  flex-col  w-full md:max-w-50   text-xs border w-auto bg-gray-200 border-gray-300 p-1 rounded-xl gap-2'>
-                        <div className='flex justify-between  gap-5 items-center'>
+                    <div className='flex  flex-col md:justify-center md:max-w-50   text-xs border w-auto bg-gray-200 border-gray-300 p-1 rounded-xl gap-2'>
+                        <div className='flex justify-between   gap-5 items-center'>
                             <p className=''>Total Orders</p>
                             <p className=' w-20'>{customerDetail?.totalOrder}</p>
                         </div>
@@ -108,10 +108,7 @@ export default function CustomerDetails() {
                             <p>Total Amount </p>
                             <p className='text-green-500 w-20 flex text-sm'><IndianRupee size={16}/> {customerDetail?.totalAmount}</p>
                         </div>
-                        <div className='flex gap-5 justify-between items-center'>
-                            <p>Total Orders</p>
-                            <p className='w-20'>5</p>
-                        </div>
+                
 
                     </div>
 
@@ -143,20 +140,13 @@ export default function CustomerDetails() {
                         {/* whatsapp */}
                         <div className='flex justify-between items-center'>
                             <div className='flex gap-3'>
-                                <PhoneCallIcon size={18} className='text-violet-400' />
+                                <Mail size={18} className='text-violet-400' />
                                 <p>Phone</p>
                             </div>
-                            <p>{customerDetail?.Phone}</p>
-                            <Phone className='border h-8 w-8 p-1 text-violet-400 rounded-xl' />
-                        </div>
-                        <div className='flex justify-between items-center'>
-                            <div className='flex gap-3'>
-                                <Mail size={18} className='text-violet-400' />
-                                <p>Email</p>
-                            </div>
-                            <p>{customerDetail?.Email}</p>
+                            <p>{customerDetail?.Gmail}</p>
                             <Mail className='border h-8 w-8 p-1 text-violet-400 rounded-xl' />
                         </div>
+                        {/* */}
                     </div>
                 </div>
 
@@ -219,6 +209,13 @@ export default function CustomerDetails() {
                                 </div>
                             )}
                             {value.status == "Delivered" && (
+                                <div className=' bg-orange-100 h-8 px-4 flex text-green-400 bg-green-100 gap-1 items-center rounded-xl'>
+                                    <Truck
+                                    size={17} className='text-green-600 '/>
+                                    <p>{value.status}</p>
+                                </div>
+                            )}
+                            {value.status == "Processing" && (
                                 <div className=' bg-orange-100 h-8 px-4 flex text-green-400 bg-green-100 gap-1 items-center rounded-xl'>
                                     <Truck
                                     size={17} className='text-green-600 '/>
