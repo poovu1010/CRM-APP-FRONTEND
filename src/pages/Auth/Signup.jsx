@@ -109,7 +109,7 @@ const Signup = () => {
 
   return (
     <div className="px-10  flex justify-center w-full">
-      <div className=" w-full max-w-md bg-white md:max-w-[100]  flex flex-col rounded-3xl">
+      <div className=" w-full max-w-80 bg-white md:max-w-100  flex flex-col rounded-3xl">
         {/* Header - Logo Section */}
         <div className="flex flex-col pt-6 items-center">
           <img
