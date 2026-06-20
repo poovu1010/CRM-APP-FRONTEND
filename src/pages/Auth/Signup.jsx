@@ -102,7 +102,9 @@ const Signup = () => {
 
       toast.error("Your network is problem")
 
-    } 
+    }finally{
+      setOtp("")
+    }
 
 
   }
