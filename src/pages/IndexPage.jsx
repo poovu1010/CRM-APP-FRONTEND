@@ -72,6 +72,12 @@ export default function IndexPage() {
               >
                 Already have account
               </button>
+              <button
+                onClick={() => navigate("/Order-status/Login")}
+                className="h-12 px-6 rounded-2xl bg-gray-400 text-gray-800 font-bold border border-gray-200 shadow-sm hover:bg-gray-800 hover:text-white hover:transition-all hover:duration-300"
+              >
+                Check Order Status
+              </button>
             </div>
 
             {/* Points */}

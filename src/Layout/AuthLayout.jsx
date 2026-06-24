@@ -3,6 +3,8 @@ import { Outlet } from "react-router-dom";
 import bgimgDesktop from "../assets/bgimg.png";
 import bgimgMobile from "../assets/bgimgmobile.png";
 
+
+
 export default function AuthLayout() {
   return (
     <div className="h-screen w-screen relative">
