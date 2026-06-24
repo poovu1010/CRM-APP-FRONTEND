@@ -23,6 +23,8 @@ import OrderPageLayout from "../Layout/OrderPageLayout";
 import OrderDetail from "../pages/OrderDetail";
 import OrderDetailLayout from "../Layout/OrderDetailLayout";
 import DashBoardData from "../pages/DashBoardData";
+import LoginCustomer from "../pages/CheckStatus/LoginCustomer";
+import CheckStatus from "../pages/CheckStatus/CheckStatus";
 
 const Router = () => {
   const { authData } = useContext(AuthDetails);
@@ -59,6 +61,15 @@ const Router = () => {
           <Route path="/Orders" element={<OrderDetailLayout/>}>
           <Route path="all-orders/:name/:id" element={<OrderDetail/>}/>
           </Route>
+
+          {/* check Order Stauslogin */}
+
+          <Route path="/Order-status/Login" element={<LoginCustomer/>} />
+
+          {/* orderstatus Dashboard checkin */}
+          <Route path="/Order-status/Info-status" element={<CheckStatus/>} />
+
+          
 
            
       </Routes>
