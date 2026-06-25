@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import BGimgLarge from '../../assets/bgimgCustomerLG.png'
 import BGimgSmall from '../../assets/bgimgcustomerSM.png'
-import { Lock } from 'lucide-react'
+import { Loader, Lock } from 'lucide-react'
 import { pre } from 'framer-motion/client'
 import api from '../../api/axios'
 import { toast } from 'react-toastify'
@@ -22,6 +22,8 @@ export default function LoginCustomer() {
         email: "",
         otp: "",
     });
+
+    const [loading,setLoading] = useState(false)
 
 
     const [EmailView, SetEmailView] = useState(true)
@@ -48,6 +50,7 @@ export default function LoginCustomer() {
     async function handleSendOtp() {
 
         try {
+            setLoading(true)
 
             const error = validateField("email", loginInfo.email);
 
@@ -63,11 +66,14 @@ export default function LoginCustomer() {
             toast.success(sendemail.data.message)
 
             SetEmailView(false);
+            setLoading(false)
 
 
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
+        }finally{
+            setLoading(false)
         }
 
 
@@ -80,6 +86,7 @@ export default function LoginCustomer() {
     async function handleLogin() {
 
         try {
+            setLoading(true)
         
             const error = validateField("otp", loginInfo.otp);
 
@@ -111,6 +118,9 @@ export default function LoginCustomer() {
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
+            
+        }finally{
+            setLoading(false)
         }
 
     }
@@ -118,8 +128,8 @@ export default function LoginCustomer() {
     return (
         <div className=' relative h-screen w-full'>
             {/* bg-img */}
-            <div className='inset absolute h-full w-full'>
-                <img src={BGimgLarge} alt="" className='hidden md:block object-cover h-full ' />
+            <div className='absolute h-full w-full'>
+                <img src={BGimgLarge} alt="" className='hidden md:block object-cove w-full h-full ' />
                 <img src={BGimgSmall} alt="" className='md:hidden object-cover h-full w-full ' />
             </div>
 
@@ -150,7 +160,7 @@ export default function LoginCustomer() {
 
 
                     {/* form */}
-                    {EmailView ? <EmailForm Email={loginInfo.email} SetEmail={setLoginInfo} onclick={handleSendOtp} Error={errors.email} /> : <OtpForm OTP={loginInfo.otp} SetOtp={setLoginInfo} onclick={handleLogin} Error={errors.otp} />}
+                    {EmailView ? <EmailForm Email={loginInfo.email} SetEmail={setLoginInfo} onclick={handleSendOtp} Error={errors.email} loader={loading} /> : <OtpForm OTP={loginInfo.otp} SetOtp={setLoginInfo} onclick={handleLogin} Error={errors.otp} loader={loading} />}
 
 
 
@@ -173,7 +183,7 @@ export default function LoginCustomer() {
     )
 }
 
-function EmailForm({ Email, SetEmail, onclick, Error }) {
+function EmailForm({ Email, SetEmail, onclick, Error,loader }) {
 
     return (
         <div className='px-4 min-w-0 flex flex-col gap-5'>
@@ -193,8 +203,10 @@ function EmailForm({ Email, SetEmail, onclick, Error }) {
 
             </div>
 
-            <button onClick={onclick} className='bg-amber-900  w-10/11 ml-2 text-white rounded-lg h-11 min-w-0 truncate'>
+            <button onClick={onclick} className='flex justify-center items-center  bg-amber-900  w-10/11 ml-2 text-white rounded-lg h-11 min-w-0 truncate'>
+           
                 Send OTP
+               { loader && <Loader className='ml-4 rotate'/>}
             </button>
 
             {/* otp check */}
@@ -203,7 +215,7 @@ function EmailForm({ Email, SetEmail, onclick, Error }) {
     )
 }
 
-function OtpForm({ OTP, SetOtp, onclick, Error }) {
+function OtpForm({ OTP, SetOtp, onclick, Error ,loader}) {
 
     return (
 
@@ -220,7 +232,8 @@ function OtpForm({ OTP, SetOtp, onclick, Error }) {
 
             </div>
 
-            <button onClick={onclick} className='bg-amber-900  w-10/11 ml-2 text-white rounded-lg h-11 min-w-0 truncate'>
+            <button onClick={onclick} className= 'flex justify-center items-center  bg-amber-900  w-10/11 ml-2 text-white rounded-lg h-11 min-w-0 truncate'>
+                { loader && <Loader className='ml-4 rotate'/>}
                 Login
             </button>
 

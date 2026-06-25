@@ -70,10 +70,7 @@ export default function CustomerDetails() {
                     <p>Customer Details</p>
                 </div>
 
-                <div className='flex gap-2 text-violet-500 cursor-pointer'>
-                    <Edit2 />
-                    <span>Edit</span>
-                </div>
+               
 
             </header>
 
@@ -138,12 +135,12 @@ export default function CustomerDetails() {
                         </div>
 
                         {/* whatsapp */}
-                        <div className='flex justify-between items-center'>
+                        <div className='flex gap-2 justify-between min-w-0 items-center'>
                             <div className='flex gap-3'>
                                 <Mail size={18} className='text-violet-400' />
-                                <p>Phone</p>
+                                <p>Mail</p>
                             </div>
-                            <p>{customerDetail?.Gmail}</p>
+                            <p className='truncate'>{customerDetail?.Gmail}</p>
                             <Mail className='border h-8 w-8 p-1 text-violet-400 rounded-xl' />
                         </div>
                         {/* */}

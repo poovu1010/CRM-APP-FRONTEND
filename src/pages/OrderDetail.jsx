@@ -239,10 +239,10 @@ export default function OrderDetail() {
                 <p className="text-sm text-gray-600">{order?.notes}</p>
             </div>
 
-             <button className="flex gap-2 w-full justify-center bg-violet-500 text-white h-10 px-4 items-center rounded-xl">
+             {/* <button className="flex gap-2 w-full justify-center bg-violet-500 text-white h-10 px-4 items-center rounded-xl">
                     <EditIcon size={18} />
                     <p className="text-sm font-medium">Update Status</p>
-                </button>
+                </button> */}
         </section>
     );
 }
